@@ -1,25 +1,26 @@
 package com.infnet.pb.AT.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "resources")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Role {
+public class Resource {
     @Id
     @GeneratedValue
     private UUID id;
 
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
+
+
+    private String description;
+    private String location;
+    private Integer capacity;
 }
