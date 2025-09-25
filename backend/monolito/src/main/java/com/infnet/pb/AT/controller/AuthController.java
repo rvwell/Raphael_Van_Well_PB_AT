@@ -4,15 +4,15 @@ import com.infnet.pb.AT.model.User;
 import com.infnet.pb.AT.security.AuthService;
 import com.infnet.pb.AT.security.JwtService;
 import com.infnet.pb.AT.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import com.infnet.pb.AT.DTO.LoginRequest;
+import com.infnet.pb.AT.DTO.RegisterRequest;
+import com.infnet.pb.AT.DTO.TokenResponse;
 
 @RestController
 @RequestMapping("/auth")
@@ -52,29 +52,4 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class LoginRequest {
-        private String email;
-        private String password;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class RegisterRequest {
-        private String email;
-        private String name;
-        private String password;
-        private java.util.Set<com.infnet.pb.AT.model.Role> roles;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class TokenResponse {
-        private String accessToken;
-        private String tokenType;
-    }
 }
