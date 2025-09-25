@@ -19,3 +19,9 @@ app:
   jwt:
     secret: "teste"
     expiration: 3600000
+
+jwt:
+  private:
+    key: classpath:app.key
+  public:
+    key: classpath:app.pub
