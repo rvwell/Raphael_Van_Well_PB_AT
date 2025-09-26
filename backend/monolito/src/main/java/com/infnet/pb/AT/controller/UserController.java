@@ -22,7 +22,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Admin-only: get user by email
     @GetMapping("/{email}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
@@ -38,7 +37,6 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // Authenticated user: get own profile
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> me(Authentication authentication) {
@@ -48,7 +46,6 @@ public class UserController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Authenticated user: update own name
     @PutMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> updateMe(Authentication authentication, @RequestBody UpdateProfileRequest request) {
@@ -57,8 +54,7 @@ public class UserController {
                 .map(u -> ResponseEntity.ok(userService.updateName(u.getId(), request.getName())))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
-    // Authenticated user: change own password
+    
     @PutMapping("/me/password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> changePassword(Authentication authentication, @RequestBody ChangePasswordRequest request) {

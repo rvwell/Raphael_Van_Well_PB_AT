@@ -20,14 +20,12 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
 
-    // Listar todos os recursos - requer autenticação
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Resource>> getAllResources() {
         return ResponseEntity.ok(resourceService.findAll());
     }
 
-    // Obter um recurso por ID - requer autenticação
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Resource> getById(@PathVariable String id) {
@@ -36,7 +34,6 @@ public class ResourceController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Criar recurso - somente ADMIN
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> createResource(@RequestBody CreateResourceRequest req) {
@@ -53,7 +50,6 @@ public class ResourceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // Atualizar recurso - somente ADMIN
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> updateResource(@PathVariable String id, @RequestBody UpdateResourceRequest req) {
@@ -71,7 +67,6 @@ public class ResourceController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Excluir recurso - somente ADMIN
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteResource(@PathVariable String id) {
