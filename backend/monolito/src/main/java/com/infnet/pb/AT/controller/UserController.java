@@ -54,7 +54,7 @@ public class UserController {
                 .map(u -> ResponseEntity.ok(userService.updateName(u.getId(), request.getName())))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-    
+
     @PutMapping("/me/password")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> changePassword(Authentication authentication, @RequestBody ChangePasswordRequest request) {

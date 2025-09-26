@@ -20,24 +20,18 @@ public class User {
     @GeneratedValue
     private UUID id;
 
-
     @Column(nullable = false, unique = true)
     private String email;
-
 
     @Column(nullable = false)
     private String password;
 
-
     @Column(nullable = false)
     private String name;
 
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<RoleType> roles;
 }

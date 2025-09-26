@@ -1,6 +1,6 @@
 package com.infnet.pb.AT.DTO;
 
-import com.infnet.pb.AT.model.Role;
+import com.infnet.pb.AT.model.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +14,5 @@ public class RegisterRequest {
     private String email;
     private String name;
     private String password;
-    private Set<Role> roles;
+    private Set<RoleType> roles;
 }

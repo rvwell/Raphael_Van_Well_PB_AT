@@ -1,6 +1,6 @@
 package com.infnet.pb.AT.security;
 
-import com.infnet.pb.AT.model.Role;
+import com.infnet.pb.AT.model.RoleType;
 import com.infnet.pb.AT.model.User;
 import com.infnet.pb.AT.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,8 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorities = user.getRoles() == null ? List.of() :
                 user.getRoles().stream()
-                        .map(Role::getName)
-                        .map(roleName -> roleName.startsWith("ROLE_") ? roleName : "ROLE_" + roleName)
+                        .map(RoleType::getAuthority)
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 

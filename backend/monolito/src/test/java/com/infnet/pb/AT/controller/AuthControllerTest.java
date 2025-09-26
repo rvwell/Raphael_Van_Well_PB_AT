@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infnet.pb.AT.DTO.LoginRequest;
 import com.infnet.pb.AT.DTO.RegisterRequest;
 import com.infnet.pb.AT.DTO.TokenResponse;
-import com.infnet.pb.AT.model.Role;
+import com.infnet.pb.AT.model.RoleType;
 import com.infnet.pb.AT.model.User;
 import com.infnet.pb.AT.security.AuthService;
 import com.infnet.pb.AT.security.JwtService;
@@ -108,14 +108,11 @@ class AuthControllerTest {
     @Test
     void register_WithNewUser_ShouldReturnCreatedUser() {
         // Arrange
-        Role userRole = new Role();
-        userRole.setName("USER");
-        
         RegisterRequest registerRequest = new RegisterRequest(
                 "newuser@example.com", 
                 "New User", 
                 "password123", 
-                Set.of(userRole)
+                Set.of(RoleType.USER)
         );
         
         User savedUser = User.builder()
@@ -123,7 +120,7 @@ class AuthControllerTest {
                 .email("newuser@example.com")
                 .name("New User")
                 .password("encoded-password")
-                .roles(Set.of(userRole))
+                .roles(Set.of(RoleType.USER))
                 .build();
 
         when(userService.findOptionalByEmail("newuser@example.com")).thenReturn(Optional.empty());
@@ -200,14 +197,11 @@ class AuthControllerTest {
     @Test
     void register_WithMockMvc_ShouldReturnCreatedUser() throws Exception {
         // Arrange
-        Role userRole = new Role();
-        userRole.setName("USER");
-        
         RegisterRequest registerRequest = new RegisterRequest(
                 "newuser@example.com", 
                 "New User", 
                 "password123", 
-                Set.of(userRole)
+                Set.of(RoleType.USER)
         );
         
         User savedUser = User.builder()
@@ -215,7 +209,7 @@ class AuthControllerTest {
                 .email("newuser@example.com")
                 .name("New User")
                 .password("encoded-password")
-                .roles(Set.of(userRole))
+                .roles(Set.of(RoleType.USER))
                 .build();
 
         when(userService.findOptionalByEmail("newuser@example.com")).thenReturn(Optional.empty());
