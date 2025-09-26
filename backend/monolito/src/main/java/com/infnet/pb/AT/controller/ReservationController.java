@@ -27,7 +27,6 @@ public class ReservationController {
     @Autowired
     private UserService userService;
 
-    // Create reservation for current user
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> createReservation(Authentication authentication, @RequestBody CreateReservationRequest req) {
@@ -59,14 +58,12 @@ public class ReservationController {
         }
     }
 
-    // List all reservations - ADMIN only
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Reservation>> listAll() {
         return ResponseEntity.ok(reservationService.findAll());
     }
 
-    // Get reservation by id - only owner or ADMIN
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Reservation> getById(Authentication authentication, @PathVariable String id) {
@@ -84,7 +81,6 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    // List current user's reservations
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Reservation>> myReservations(Authentication authentication) {
@@ -97,7 +93,6 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getUserReservations(userId));
     }
 
-    // Cancel reservation - only owner or ADMIN
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> cancelReservation(Authentication authentication, @PathVariable String id) {
