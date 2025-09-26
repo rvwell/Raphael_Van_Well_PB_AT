@@ -31,7 +31,11 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(
+        name = "user_roles", 
+        joinColumns = @JoinColumn(name = "user_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"})
+    )
     @Column(name = "role")
     private Set<RoleType> roles;
 }

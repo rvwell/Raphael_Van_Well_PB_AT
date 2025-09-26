@@ -1,5 +1,6 @@
 package com.infnet.pb.AT.controller;
 
+import com.infnet.pb.AT.model.RoleType;
 import com.infnet.pb.AT.model.User;
 import com.infnet.pb.AT.security.AuthService;
 import com.infnet.pb.AT.security.JwtService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import com.infnet.pb.AT.DTO.LoginRequest;
 import com.infnet.pb.AT.DTO.RegisterRequest;
 import com.infnet.pb.AT.DTO.TokenResponse;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,11 +45,21 @@ public class AuthController {
         if (userService.findOptionalByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+        
+        // Converte a string do role para RoleType
+        RoleType roleType;
+        try {
+            roleType = RoleType.fromString(request.getRole());
+        } catch (IllegalArgumentException e) {
+            // Se o role não for válido, retorna erro 400
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        
         User user = User.builder()
                 .email(request.getEmail())
                 .name(request.getName())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(request.getRoles())
+                .roles(Set.of(roleType)) // Converte para Set<RoleType>
                 .build();
         User saved = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);

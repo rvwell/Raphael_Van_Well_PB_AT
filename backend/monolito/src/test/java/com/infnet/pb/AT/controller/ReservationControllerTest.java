@@ -84,8 +84,6 @@ class ReservationControllerTest {
         );
     }
 
-    // ========== UNIT TESTS ==========
-
     @Test
     @WithMockUser(username = "user@test.com", roles = {"USER"})
     void createReservation_Success() throws Exception {

@@ -90,13 +90,12 @@ class AuthControllerTest {
 
     @Test
     void login_WithInvalidCredentials_ShouldThrowBadCredentialsException() {
-        // Arrange
+
         LoginRequest loginRequest = new LoginRequest("user@example.com", "wrongpassword");
         
         when(authService.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new BadCredentialsException("Invalid credentials"));
 
-        // Act & Assert
         assertThrows(BadCredentialsException.class, () -> {
             authController.login(loginRequest);
         });
@@ -107,12 +106,12 @@ class AuthControllerTest {
 
     @Test
     void register_WithNewUser_ShouldReturnCreatedUser() {
-        // Arrange
+
         RegisterRequest registerRequest = new RegisterRequest(
                 "newuser@example.com", 
                 "New User", 
                 "password123", 
-                Set.of(RoleType.USER)
+                "USER"
         );
         
         User savedUser = User.builder()
@@ -127,10 +126,9 @@ class AuthControllerTest {
         when(passwordEncoder.encode("password123")).thenReturn("encoded-password");
         when(userService.save(any(User.class))).thenReturn(savedUser);
 
-        // Act
+
         ResponseEntity<User> response = authController.register(registerRequest);
 
-        // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("newuser@example.com", response.getBody().getEmail());
@@ -144,12 +142,12 @@ class AuthControllerTest {
 
     @Test
     void register_WithExistingEmail_ShouldReturnConflict() {
-        // Arrange
+
         RegisterRequest registerRequest = new RegisterRequest(
                 "existing@example.com", 
                 "Existing User", 
                 "password123", 
-                Set.of()
+                "USER"
         );
         
         User existingUser = User.builder()
@@ -162,10 +160,8 @@ class AuthControllerTest {
         when(userService.findOptionalByEmail("existing@example.com"))
                 .thenReturn(Optional.of(existingUser));
 
-        // Act
         ResponseEntity<User> response = authController.register(registerRequest);
 
-        // Assert
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertNull(response.getBody());
 
@@ -176,7 +172,7 @@ class AuthControllerTest {
 
     @Test
     void login_WithMockMvc_ShouldReturnTokenResponse() throws Exception {
-        // Arrange
+
         LoginRequest loginRequest = new LoginRequest("user@example.com", "password123");
         String expectedToken = "jwt-token-123";
         
@@ -184,7 +180,6 @@ class AuthControllerTest {
                 .thenReturn(authentication);
         when(jwtService.generateToken(authentication)).thenReturn(expectedToken);
 
-        // Act & Assert
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
@@ -201,7 +196,7 @@ class AuthControllerTest {
                 "newuser@example.com", 
                 "New User", 
                 "password123", 
-                Set.of(RoleType.USER)
+                "USER"
         );
         
         User savedUser = User.builder()
@@ -216,7 +211,7 @@ class AuthControllerTest {
         when(passwordEncoder.encode("password123")).thenReturn("encoded-password");
         when(userService.save(any(User.class))).thenReturn(savedUser);
 
-        // Act & Assert
+
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
@@ -233,7 +228,7 @@ class AuthControllerTest {
                 "existing@example.com", 
                 "Existing User", 
                 "password123", 
-                Set.of()
+                "USER"
         );
         
         User existingUser = User.builder()
@@ -246,7 +241,6 @@ class AuthControllerTest {
         when(userService.findOptionalByEmail("existing@example.com"))
                 .thenReturn(Optional.of(existingUser));
 
-        // Act & Assert
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
