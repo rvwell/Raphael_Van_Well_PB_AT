@@ -23,7 +23,7 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/{email}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         return userService.findOptionalByEmail(email)
                 .map(ResponseEntity::ok)
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
