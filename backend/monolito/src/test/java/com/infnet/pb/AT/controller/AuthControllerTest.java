@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,7 +66,6 @@ class AuthControllerTest {
 
     @Test
     void login_WithValidCredentials_ShouldReturnTokenResponse() {
-        // Arrange
         LoginRequest loginRequest = new LoginRequest("user@example.com", "password123");
         String expectedToken = "jwt-token-123";
         
@@ -75,10 +73,8 @@ class AuthControllerTest {
                 .thenReturn(authentication);
         when(jwtService.generateToken(authentication)).thenReturn(expectedToken);
 
-        // Act
         ResponseEntity<TokenResponse> response = authController.login(loginRequest);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(expectedToken, response.getBody().getAccessToken());
@@ -119,7 +115,7 @@ class AuthControllerTest {
                 .email("newuser@example.com")
                 .name("New User")
                 .password("encoded-password")
-                .roles(Set.of(RoleType.USER))
+                .role(RoleType.USER)
                 .build();
 
         when(userService.findOptionalByEmail("newuser@example.com")).thenReturn(Optional.empty());
@@ -191,7 +187,6 @@ class AuthControllerTest {
 
     @Test
     void register_WithMockMvc_ShouldReturnCreatedUser() throws Exception {
-        // Arrange
         RegisterRequest registerRequest = new RegisterRequest(
                 "newuser@example.com", 
                 "New User", 
@@ -204,7 +199,7 @@ class AuthControllerTest {
                 .email("newuser@example.com")
                 .name("New User")
                 .password("encoded-password")
-                .roles(Set.of(RoleType.USER))
+                .role(RoleType.USER)
                 .build();
 
         when(userService.findOptionalByEmail("newuser@example.com")).thenReturn(Optional.empty());
@@ -223,7 +218,6 @@ class AuthControllerTest {
 
     @Test
     void register_WithExistingEmailMockMvc_ShouldReturnConflict() throws Exception {
-        // Arrange
         RegisterRequest registerRequest = new RegisterRequest(
                 "existing@example.com", 
                 "Existing User", 

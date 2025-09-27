@@ -15,8 +15,6 @@ import com.infnet.pb.AT.DTO.LoginRequest;
 import com.infnet.pb.AT.DTO.RegisterRequest;
 import com.infnet.pb.AT.DTO.TokenResponse;
 
-import java.util.Set;
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -46,12 +44,12 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         
-        // Converte a string do role para RoleType
+
         RoleType roleType;
         try {
-            roleType = RoleType.fromString(request.getRole());
+            roleType = RoleType.valueOf(request.getRole().toUpperCase());
         } catch (IllegalArgumentException e) {
-            // Se o role não for válido, retorna erro 400
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         
@@ -59,7 +57,7 @@ public class AuthController {
                 .email(request.getEmail())
                 .name(request.getName())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .roles(Set.of(roleType)) // Converte para Set<RoleType>
+                .role(roleType)
                 .build();
         User saved = userService.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);

@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -23,17 +22,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Treat username as email for authentication purposes
         User user = userRepository.findByEmail(username);
         if (user == null) {
             throw new UsernameNotFoundException("Usuário não encontrado: " + username);
         }
 
-        List<SimpleGrantedAuthority> authorities = user.getRoles() == null ? List.of() :
-                user.getRoles().stream()
-                        .map(RoleType::getAuthority)
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        List<SimpleGrantedAuthority> authorities = user.getRole() == null ? List.of() :
+                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

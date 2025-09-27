@@ -11,6 +11,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateReservationRequest {
     private UUID resourceId;
-    private String start; // ISO-8601
-    private String end;   // ISO-8601
+    private String start;
+    private String end;
 }
